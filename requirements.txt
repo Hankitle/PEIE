@@ -1,0 +1,9 @@
+torch==2.4.1
+torchvision==0.19.1
+numpy==1.24.3
+opencv-python==4.10.0.84
+opencv-python-headless==4.10.0.84
+pyyaml
+scipy
+pyiqa
+

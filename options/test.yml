@@ -1,0 +1,48 @@
+name: PEIE_test_official
+model_type: PEIEModel
+scale: 4
+num_gpu: 1  # set num_gpu: 0 for cpu mode
+manual_seed: 0
+
+datasets:
+  test_1:
+    name: RTTS
+    type: SingleImageDataset
+    dataroot_lq: datasets/RTTS # change to the path of RTTS images
+    io_backend:
+      type: disk
+  test_2:
+    name: Fattal
+    type: SingleImageDataset
+    dataroot_lq: datasets/Fattal # change to the path of Fattal images
+    io_backend:
+      type: disk
+
+# network structures
+network_g:
+  type: IADNet
+  num_feat: 64
+  max_depth: 2
+  num_block: [2, 2, 2, 2, 2]
+
+
+# path
+path:
+  pretrain_network_g: ~ # change to the path of the pretrained model
+  strict_load_g: true
+
+# validation settings
+val:
+  save_img: true
+  suffix: ~  # add suffix to saved images, if None, use exp name
+
+  metrics:
+    niqe:
+      type: pyiqa_niqe
+      better: lower
+    brisque:
+      type: pyiqa_brisque
+      better: lower
+    nima:
+      type: pyiqa_nima
+      better: higher

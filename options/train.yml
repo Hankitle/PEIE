@@ -1,0 +1,141 @@
+# general settings
+name: PEIE_train_official
+model_type: PEIEModel
+scale: 1
+num_gpu: 4 # set num_gpu: 0 for cpu mode
+manual_seed: 0
+
+# dataset and data loader settings
+datasets:
+  train:  # configuration for training dataset
+    name: PEIEData
+    type: PEIEDataset
+
+    dataroot_gt: datasets/RIDCP/clear # change to the path of RIDCP clear images
+    dataroot_depth: datasets/RIDCP/depth # change to the path of RIDCP depth maps
+    dataroot_hq: datasets/RIDCP/lighten # change to the path of RIDCP lightened images
+
+    light_range: [-1, 2.5]
+    light_probabilities: [1.0]
+    beta_range: [0.8, 2.0]
+    A_range: [0.8, 1.0]
+    color_range: [0, 0.1]
+
+    data_iter: []
+    train_size: [256]
+    batch_size_per_gpu: [4]
+
+    # data augmentation
+    use_resize_crop: true
+    use_hflip: true
+
+    # data loader
+    use_shuffle: true
+    num_worker_per_gpu: 1
+    dataset_enlarge_ratio: 1  # enlarge the dataset by repeating it
+    prefetch_mode: ~
+
+  val:
+    name: RTTS  
+    type: SingleImageDataset
+    dataroot_lq: datasets/RTTS # change to the path of RIDCP lightened images
+    io_backend:
+      type: disk
+
+# network structures
+network_g:
+  type: IADNet
+  num_feat: 64
+  max_depth: 2
+  num_block: [2, 2, 2, 2, 2]
+
+network_d:
+  type: UNetDiscriminatorSN 
+  # network parameters
+  num_in_ch: 3
+  num_feat: 64
+  skip_connection: true
+
+path:
+  pretrain_network_g: ~
+  pretrain_network_d: ~
+  strict_load: false # if true, it will raise error if the model is not loaded successfully
+  resume_state: ~ # which will overwrite the pretrain_network_g
+
+# training settings
+train:
+  # ema_decay: 0.999 # decay for the exponential moving average
+
+  # models/base_model.py/get_optimizer() for more details
+  optim_g:
+    type: AdamW
+    lr: !!float 1e-4
+    weight_decay: 0
+    betas: [0.9, 0.99]
+
+  optim_d:
+    type: AdamW
+    lr: !!float 1e-4
+    weight_decay: 0
+    betas: [0.9, 0.99]
+
+  scheduler:
+    type: CosineAnnealingRestartLR
+    periods: [10000]
+    restart_weights: [1]
+    eta_min: !!float 1e-4
+
+  total_iter: 10000
+  warmup_iter: -1  # -1 for no warmup
+
+  # losses
+  pixel_opt:
+    type: L1Loss
+    loss_weight: 1.0 
+    reduction: mean
+    
+  perceptual_opt:
+    type: PerceptualLossSimple
+    layer_weights:
+      # before relu
+      'conv1_2': 0.1
+      'conv2_2': 0.1
+      'conv3_4': 1
+      'conv4_4': 1
+      'conv5_4': 1
+    vgg_type: vgg19
+    use_input_norm: true
+    range_norm: false
+    loss_weight: !!float 1.0
+    
+  gan_opt:
+    type: GANLoss
+    gan_type: vanilla
+    real_label_val: 1.0
+    fake_label_val: 0.0
+    loss_weight: !!float 1e-1
+# validation settings·
+val:
+  val_freq: !!float 2e3
+  save_img: true
+  pbar: true
+
+  metrics:
+    niqe:
+      type: pyiqa_niqe
+      better: lower
+    brisque:
+      type: pyiqa_brisque
+      better: lower
+    nima:
+      type: pyiqa_nima
+      better: higher
+
+# logging settings
+logger:
+  print_freq: 500
+  save_checkpoint_freq: !!float 2e3
+  use_tb_logger: true
+  wandb:
+    project: ~
+    resume_id: ~
