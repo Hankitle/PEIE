@@ -18,10 +18,19 @@ pip install -r requirements.txt
 python setup.py develop
 ```
 
-## Data and Checkpoints
+## Datasets
 
-- Prepare datasets and pretrained checkpoints according to paths in [options/train.yml](options/train.yml) and [options/test.yml](options/test.yml).
-- Update the path fields in option files to match your local environment.
+* The RIDCP dataset, including 500 clear images and their corresponding results processed by RetinexFormer and DepthAnything, can be downloaded from: [Google Drive Download Link](https://drive.google.com/drive/folders/1KzmBNb5GtJ5ZNLbvqX5uC6bADhfHEJ1O?usp=drive_link&utm_source=chatgpt.com)
+
+* The datasets used for evaluation in this work include the RTTS dataset and Fattal's dataset.
+
+  * **RTTS Dataset:**
+    [RTTS Download Page](https://sites.google.com/view/reside-dehaze-datasets/reside-%CE%B2?utm_source=chatgpt.com)
+
+  * **Fattal's Dataset:**
+    [Fattal's Dataset Download Page](https://www.cs.huji.ac.il/w~raananf/projects/dehaze_cl/results/?utm_source=chatgpt.com)
+
+* Please update the dataset paths in the option files according to your local environment before training or evaluation.
 
 ## Training
 
