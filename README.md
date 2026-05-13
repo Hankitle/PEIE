@@ -20,17 +20,17 @@ python setup.py develop
 
 ## Datasets
 
-* The RIDCP dataset, including 500 clear images and their corresponding results processed by RetinexFormer and DepthAnything, can be downloaded from: [Google Drive Download Link](https://drive.google.com/drive/folders/1KzmBNb5GtJ5ZNLbvqX5uC6bADhfHEJ1O?usp=drive_link&utm_source=chatgpt.com)
+* The RIDCP dataset, including 500 clear images and their corresponding results processed by RetinexFormer and DepthAnything, can be downloaded from: [Google Drive Download Link](https://drive.google.com/drive/folders/1KzmBNb5GtJ5ZNLbvqX5uC6bADhfHEJ1O)
 
 * The datasets used for evaluation in this work include the RTTS dataset and Fattal's dataset.
 
   * **RTTS Dataset:**
-    [RTTS Download Page](https://sites.google.com/view/reside-dehaze-datasets/reside-%CE%B2?utm_source=chatgpt.com)
+    [RTTS Download Page](https://sites.google.com/view/reside-dehaze-datasets/reside-%CE%B2)
 
   * **Fattal's Dataset:**
-    [Fattal's Dataset Download Page](https://www.cs.huji.ac.il/w~raananf/projects/dehaze_cl/results/?utm_source=chatgpt.com)
+    [Fattal's Dataset Download Page](https://www.cs.huji.ac.il/w~raananf/projects/dehaze_cl/results)
 
-* Please update the dataset paths in the option files according to your local environment before training or evaluation.
+* Please update the dataset paths in the option files according to your local environment before training or testing.
 
 ## Training
 
@@ -39,6 +39,12 @@ CUDA_VISIBLE_DEVICES=0,1,2,3 bash scripts/dist_train.sh 4 options/train.yml
 ```
 
 ## Testing
+
+A directly usable pretrained model can be downloaded from: [Google Drive Download Link](https://drive.google.com/drive/folders/1KzmBNb5GtJ5ZNLbvqX5uC6bADhfHEJ1O)
+
+> **Note:** The released checkpoint is re-trained and may differ slightly from the one used in the paper, while achieving comparable performance.
+
+* Please update the pretrain_network_g paths in the option files according to your local environment before testing.
 
 ```bash
 CUDA_VISIBLE_DEVICES=0 python basicsr/test.py -opt options/test.yml
